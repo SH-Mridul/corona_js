@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel='stylesheet' href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">  
+
+       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        <style>
+            #loading {
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            position: fixed;
+            display: block;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 99;
+            text-align: center;
+            }
+
+            #loading-image {
+            position: absolute;
+            top: 25%;
+            left: 37%;
+            z-index: 100;
+            }
+
+            img{
+
+                height: 400px;
+                width: 400px;
+            }
+
+           #myInput:focus {
+           outline: none !important;
+           border-color: violet;
+           color:tomato;
+           box-shadow: 0 0 10px tomato;
+           }
+        
+        </style>
+            <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+                integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+                crossorigin="anonymous">
+            </script>
+
+           
+
+            
+
+
+    <title>Corona Virus</title>
+</head>
+
+<body>
+<div class="panel panel-default">
+    <div class="panel-body" style="text-align:center;color:teal;"><h3>COVID-19 REPORT</h3></div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-2">
+        <h5>Countries - <span id="country" style="color: purple;"></span></h5>
+    <hr>
+    </div>
+    <div class="col-md-2">
+    <h5>Total - <span id="Total"></span></h5>
+    <hr>
+     
+    </div>
+   
+    <div class="col-md-2">
+    <h5>Deaths - <span id="Deaths" style="color:red;"></span></h5>
+    <hr>
+    </div>
+     
+    <div class="col-md-2">
+    <h5>Recoverd - <span id="Recoverd" style="color:seagreen;"></span></h5>
+    <hr>
+    </div>
+    
+    <div class="col-md-2">
+    <h5>Active - <span id="Active" style="color:tomato;"></span></h5>
+    <hr>
+    </div>
+    <div class="col-md-1">
+        <button type="button" class="btn badge badge-danger" id="reaload" style="border:none"><i class="fa fa-refresh"
+                aria-hidden="true" ></i></button>
+    </div>
+    
+</div>
+<div class="row">    
+
+<div class="table-responsive col-md-12" style=" margin: 10px 10px;">
+    <input class="form-control" type="text" name="" placeholder="Search..." id="myInput" onkeyup="myFunction()"
+        autocomplete="off">
+   <table class="table table-sm table-hover table-striped" id="myTable">
+       <thead>
+           <tr>
+               <th scope="col">#</th>
+               <th scope="col">Country Name</th>
+               <th scope="col">Confirmed</th>
+               <th scope="col">Deaths</th>
+               <th scope="col">Recoverd</th>
+               <th scope="col">Active</th>
+           </tr>
+       </thead>
+           <tbody>
+
+           </tbody>
+   </table>
+   </div>
+   </div>
+
+   <div id="loading">
+       <img id="loading-image" src="tenor.gif" />
+   </div>
+
+  
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+    </script>
+
+
+<script>
+
+$(document).ready( function () {   
+setTimeout(function(){ 
+    
+fetch('https://api.kawalcorona.com/30')
+.then(res => res.json())
+.then(data => totalData(data))
+.catch(error => console.log('not found'));
+// $('#myTable').DataTable();
+
+$('#loading').hide();
+ }, 3000);
+ 
+
+
+});
+
+
+function totalData(data){
+    var html = '';
+    var Confirmed = 0;
+    var Deaths = 0;
+    var Recoverd = 0;
+    var active = 0;
+    var country = 1;
+
+    for (let i = 1; i < data.length; i++) {
+        
+        // console.log(data[i].attributes.OBJECTID);
+        html += '<tr>';
+        html += '<th scope="row">'+i+'</th>';
+        html += '<td>'+data[i].attributes.Country_Region+'</td>';
+        html += '<td>'+data[i].attributes.Confirmed+'</td>';
+                    Confirmed+=data[i].attributes.Confirmed;
+        html += '<td>'+data[i].attributes.Deaths+'</td>';
+                    Deaths+=data[i].attributes.Deaths;
+        html += '<td>'+data[i].attributes.Recovered+'</td>';
+                    Recoverd+=data[i].attributes.Recovered;
+        html += '<td>'+data[i].attributes.Active+'</td>';
+                    active+=data[i].attributes.Active;
+                   
+        html += '</tr>';
+
+         country++;
+    }
+
+     $('#myTable tbody').empty();
+     $('#myTable tbody').append(html);
+    //  console.log(Confirmed);
+     $('#Total').html(Confirmed);
+     $('#Deaths').html(Deaths);
+     $('#Recoverd').html(Recoverd);
+     $('#Active').html(active);
+     $('#country').html(country);
+
+
+}
+
+
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+
+$( "#reaload" ).on( "click", function() {
+    location.reload(true);
+});
+
+</script>
+</body>
+
+</html>
